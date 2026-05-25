@@ -1,0 +1,38 @@
+A usar: cpu
+A preparar os dados de treino e teste...
+
+A Iniciar Treino: [BASELINE]
+Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /home/leuzits/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+100%|████████████████████████████████████████████████████████| 44.7M/44.7M [00:19<00:00, 2.39MB/s]
+Época 1/2 concluída. Erro Final: 0.3784
+Época 2/2 concluída. Erro Final: 0.1848
+
+A Iniciar Treino: [REGULARIZACAO]
+Época 1/2 concluída. Erro Final: 0.4416
+Época 2/2 concluída. Erro Final: 0.2399
+
+A Iniciar Treino: [RESTRICAO]
+Época 1/2 concluída. Erro Final: 596.0963
+Época 2/2 concluída. Erro Final: 404.4203
+
+============================================================
+             RELATÓRIO DE AUDITORIA             
+============================================================
+
+1. BASELINE:
+  -> Acurácia Global: 0.85
+  -> (Independência) DI: 1.45 | SPD: 0.14
+  -> (Separação) Diff TPR: 0.15
+  -> (Suficiência) Diff PPV: 0.07
+
+2. REGULARIZAÇÃO:
+  -> Acurácia Global: 0.89
+  -> (Independência) DI: 1.18 | SPD: 0.09
+  -> (Separação) Diff TPR: 0.01
+  -> (Suficiência) Diff PPV: 0.07
+
+3. RESTRIÇÕES:
+  -> Acurácia Global: 0.89
+  -> (Independência) DI: 1.20 | SPD: 0.09
+  -> (Separação) Diff TPR: 0.01
+  -> (Suficiência) Diff PPV: 0.06
