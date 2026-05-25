@@ -14,8 +14,8 @@ EPOCHS = 2
 BATCH_SIZE = 64
 
 # Parâmetros de Mitigação de Viés
-LAMBDA_REGULARIZACAO = 0.5  # Peso para o método "Regularização" (Soft)
-EPSILON_RESTRICAO = 0.10    # Tolerância máxima de 10% de diferença para "Imposição de Restrições" (Hard)
+LAMBDA_REGULARIZACAO = 0.5  # Peso para a Regularização
+EPSILON_RESTRICAO = 0.10    # Tolerância máxima de 10% de diferença para Imposição de Restrições
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"A usar: {device}")
@@ -69,7 +69,7 @@ loader_treino = DataLoader(DatasetSimples(df_treino, PASTA_IMAGENS, col_Y, col_A
 loader_teste = DataLoader(DatasetSimples(df_teste, PASTA_IMAGENS, col_Y, col_A), batch_size=BATCH_SIZE, shuffle=False)
 
 # =====================================================================
-# 3. FUNÇÕES DE AVALIAÇÃO (OS 3 PILARES DO FAIRNESS)
+# 3. FUNÇÕES DE AVALIAÇÃO (OS 3 CONCEITOS DO FAIRNESS)
 # =====================================================================
 def metricas_fairness(y_real, y_pred, A_real):
     """
@@ -168,7 +168,7 @@ def treinar_modelo_in_processing(metodo):
             erro_total = erro_normal
             
             # -----------------------------------------------------
-            # IN-PROCESSING: CÁLCULO DE FAIRNESS NO LOTE
+            # IN-PROCESSING: CÁLCULO DE FAIRNESS
             # -----------------------------------------------------
             g0_mask = (A_real == 0)
             g1_mask = (A_real == 1)
@@ -182,14 +182,14 @@ def treinar_modelo_in_processing(metodo):
                 tpr1 = (pred_bin[g1_mask] * y_real[g1_mask]).sum() / (y_real[g1_mask].sum() + 1e-5)
                 diferenca_tpr = torch.abs(tpr0 - tpr1)
                 
-                # --- MÉTODO 1: REGULARIZAÇÃO (Soft Constraint) ---
+                # --- MÉTODO 1: REGULARIZAÇÃO ---
                 if metodo == "regularizacao":
                     erro_fairness = diferenca_tpr
                     erro_total = erro_normal + (LAMBDA_REGULARIZACAO * erro_fairness)
                 
-                # --- MÉTODO 2: IMPOSIÇÃO DE RESTRIÇÕES (Hard Constraint Simulado) ---
+                # --- MÉTODO 2: IMPOSIÇÃO DE RESTRIÇÕES  ---
                 elif metodo == "restricao":
-                    # Simulação: Se violar a restrição máxima permitida (epsilon)
+                    # Simulação: Se violar a restrição máxima permitida
                     if diferenca_tpr > EPSILON_RESTRICAO:
                         # Adiciona uma "barreira infinita" (um valor gigante)
                         # O modelo percebe que esta configuração de pesos é proibida
@@ -220,7 +220,7 @@ modelo_res = treinar_modelo_in_processing(metodo="restricao")
 res_res = testar_modelo(modelo_res)
 
 # =====================================================================
-# 6. RELATÓRIO E GRÁFICO (Muito Simples e Limpo)
+# 6. RELATÓRIO E GRÁFICO 
 # =====================================================================
 print("\n" + "="*60)
 print("             RELATÓRIO DE AUDITORIA             ")
