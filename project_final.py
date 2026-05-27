@@ -27,7 +27,7 @@ df_atributos = pd.read_csv("list_attr_celeba.csv").replace(-1, 0)
 df_particoes = pd.read_csv("list_eval_partition.csv")
 df_completo = pd.merge(df_atributos, df_particoes, on='image_id')
 
-# Vamos usar uma pequena amostra para o código correr rápido no computador
+# Pequena amostra para o código correr rápido no computador
 print("A preparar os dados de treino e teste...")
 df_treino = df_completo[df_completo['partition'] == 0].sample(n=3000, random_state=42).reset_index(drop=True)
 df_teste = df_completo[df_completo['partition'] == 2].sample(n=1000, random_state=42).reset_index(drop=True)
@@ -80,8 +80,8 @@ def metricas_fairness(y_real, y_pred, A_real):
     A_real = np.array(A_real)
     
     # Índices de cada grupo
-    g0 = (A_real == 0) # Grupo Mulheres
-    g1 = (A_real == 1) # Grupo Homens
+    g0 = (A_real == 0) #Grupo Não Jovem
+    g1 = (A_real == 1) # Grupo Jovem
     
     # ---------------------------------------------------------
     # PILAR 1: Independência (Paridade Demográfica)
