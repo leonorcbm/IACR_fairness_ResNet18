@@ -14,8 +14,8 @@ EPOCHS = 2
 BATCH_SIZE = 64
 
 # Parâmetros de Mitigação de Viés
-LAMBDA_REGULARIZACAO = 0.5  # Peso para a Regularização
-EPSILON_RESTRICAO = 0.10    # Tolerância máxima de 10% de diferença para Imposição de Restrições
+LAMBDA_REGULARIZACAO = 0.5  # Peso para o método "Regularização" (Soft)
+EPSILON_RESTRICAO = 0.10    # Tolerância máxima de 10% de diferença para "Imposição de Restrições" (Hard)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"A usar: {device}")
@@ -33,8 +33,8 @@ df_treino = df_completo[df_completo['partition'] == 0].sample(n=3000, random_sta
 df_teste = df_completo[df_completo['partition'] == 2].sample(n=1000, random_state=42).reset_index(drop=True)
 
 # Atributo Sensível e Variável Alvo
-col_A = "Male"
-col_Y = "Smiling"
+col_A = "Young"
+col_Y = "Attractive"
 
 # =====================================================================
 # 2. DEFINIR O DATASET PARA O PYTORCH
@@ -69,7 +69,7 @@ loader_treino = DataLoader(DatasetSimples(df_treino, PASTA_IMAGENS, col_Y, col_A
 loader_teste = DataLoader(DatasetSimples(df_teste, PASTA_IMAGENS, col_Y, col_A), batch_size=BATCH_SIZE, shuffle=False)
 
 # =====================================================================
-# 3. FUNÇÕES DE AVALIAÇÃO (OS 3 CONCEITOS DO FAIRNESS)
+# 3. FUNÇÕES DE AVALIAÇÃO (OS 3 PILARES DO FAIRNESS)
 # =====================================================================
 def metricas_fairness(y_real, y_pred, A_real):
     """
@@ -168,7 +168,7 @@ def treinar_modelo_in_processing(metodo):
             erro_total = erro_normal
             
             # -----------------------------------------------------
-            # IN-PROCESSING: CÁLCULO DE FAIRNESS
+            # IN-PROCESSING: CÁLCULO DE FAIRNESS NO LOTE
             # -----------------------------------------------------
             g0_mask = (A_real == 0)
             g1_mask = (A_real == 1)
@@ -182,14 +182,14 @@ def treinar_modelo_in_processing(metodo):
                 tpr1 = (pred_bin[g1_mask] * y_real[g1_mask]).sum() / (y_real[g1_mask].sum() + 1e-5)
                 diferenca_tpr = torch.abs(tpr0 - tpr1)
                 
-                # --- MÉTODO 1: REGULARIZAÇÃO ---
+                # --- MÉTODO 1: REGULARIZAÇÃO (Soft Constraint) ---
                 if metodo == "regularizacao":
                     erro_fairness = diferenca_tpr
                     erro_total = erro_normal + (LAMBDA_REGULARIZACAO * erro_fairness)
                 
-                # --- MÉTODO 2: IMPOSIÇÃO DE RESTRIÇÕES  ---
+                # --- MÉTODO 2: IMPOSIÇÃO DE RESTRIÇÕES (Hard Constraint Simulado) ---
                 elif metodo == "restricao":
-                    # Simulação: Se violar a restrição máxima permitida
+                    # Simulação: Se violar a restrição máxima permitida (epsilon)
                     if diferenca_tpr > EPSILON_RESTRICAO:
                         # Adiciona uma "barreira infinita" (um valor gigante)
                         # O modelo percebe que esta configuração de pesos é proibida
@@ -220,7 +220,7 @@ modelo_res = treinar_modelo_in_processing(metodo="restricao")
 res_res = testar_modelo(modelo_res)
 
 # =====================================================================
-# 6. RELATÓRIO E GRÁFICO 
+# 6. RELATÓRIO E GRÁFICO (Muito Simples e Limpo)
 # =====================================================================
 print("\n" + "="*60)
 print("             RELATÓRIO DE AUDITORIA             ")
@@ -228,12 +228,12 @@ print("="*60)
 
 for nome, resultados in [("1. BASELINE", res_base), ("2. REGULARIZAÇÃO", res_reg), ("3. RESTRIÇÕES", res_res)]:
     print(f"\n{nome}:")
-    print(f"  -> Acurácia Global: {resultados['Accuracy']:.2f}")
+    print(f"  -> Precisão Global: {resultados['Accuracy']:.2f}")
     print(f"  -> (Independência) DI: {resultados['DI']:.2f} | SPD: {resultados['SPD']:.2f}")
     print(f"  -> (Separação) Diff TPR: {resultados['Diff_TPR']:.2f}")
     print(f"  -> (Suficiência) Diff PPV: {resultados['Diff_PPV']:.2f}")
 
-# Gráfico simples comparando a Acurácia e a Separação (TPR Diff)
+# Gráfico simples comparando a Precisão e a Separação (TPR Diff)
 nomes = ['Baseline', 'Regularização', 'Restrições']
 accs = [res_base['Accuracy'], res_reg['Accuracy'], res_res['Accuracy']]
 viés = [res_base['Diff_TPR'], res_reg['Diff_TPR'], res_res['Diff_TPR']]

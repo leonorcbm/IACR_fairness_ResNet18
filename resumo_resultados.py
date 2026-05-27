@@ -14,14 +14,14 @@ cores = ['#e74c3c', '#3498db', '#2ecc71'] # Vermelho, Azul, Verde
 
 # --- Dados Organizados por Teste (Para o Gráfico de Dispersão / Trade-off) ---
 # Valores: [Baseline, Regularização, Restrições]
-acc_t1 = [0.85, 0.89, 0.89]
-tpr_t1 = [0.15, 0.01, 0.01]
+acc_t1 = [0.79, 0.61, 0.77]
+tpr_t1 = [0.06, 0.13, 0.07]
 
-acc_t2 = [0.89, 0.87, 0.90]
-tpr_t2 = [0.05, 0.00, 0.07]
+acc_t2 = [0.70, 0.76, 0.75]
+tpr_t2 = [0.14, 0.07, 0.00]
 
-acc_t3 = [0.88, 0.89, 0.86]
-tpr_t3 = [0.06, 0.06, 0.09]
+acc_t3 = [0.78, 0.77, 0.78]
+tpr_t3 = [0.14, 0.03, 0.02]
 
 dados_tradeoff = [
     (acc_t1, tpr_t1, 'o', 'Teste 1'),
@@ -31,17 +31,17 @@ dados_tradeoff = [
 
 # --- Dados Organizados por Métrica (Para o Gráfico de Barras dos 3 Pilares) ---
 # Valores: [Teste 1, Teste 2, Teste 3]
-spd_base = [0.14, 0.10, 0.12]
-spd_reg  = [0.09, 0.05, 0.13]
-spd_res  = [0.09, 0.15, 0.13]
+spd_base = [0.40, 0.23, 0.34]
+spd_reg  = [0.14, 0.32, 0.36]
+spd_res  = [0.41, 0.40, 0.37]
 
-tpr_base = [0.15, 0.05, 0.06]
-tpr_reg  = [0.01, 0.00, 0.06]
-tpr_res  = [0.01, 0.07, 0.09]
+tpr_base = [0.06, 0.14, 0.14]
+tpr_reg  = [0.13, 0.07, 0.03]
+tpr_res  = [0.07, 0.00, 0.02]
 
-ppv_base = [0.07, 0.07, 0.05]
-ppv_reg  = [0.07, 0.13, 0.05]
-ppv_res  = [0.06, 0.01, 0.01]
+ppv_base = [0.36, 0.25, 0.40]
+ppv_reg  = [0.02, 0.30, 0.34]
+ppv_res  = [0.43, 0.41, 0.41]
 
 dados_pilares = [
     (spd_base, spd_reg, spd_res, '1. Independência (SPD)', 'Ideal = 0.0'),
@@ -129,5 +129,4 @@ plt.tight_layout()
 fig2.savefig('grafico_02_pilares.png', dpi=300, bbox_inches='tight')
 print("Gráfico 2 (Três Pilares) guardado como 'grafico_02_pilares.png'")
 
-# Mostrar ambos os gráficos no ecrã
 plt.show()
