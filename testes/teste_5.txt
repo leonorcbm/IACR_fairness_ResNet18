@@ -1,0 +1,36 @@
+A usar: cpu
+A preparar os dados de treino e teste...
+
+A Iniciar Treino: [BASELINE]
+Época 1/2 concluída. Erro Final: 0.5671
+Época 2/2 concluída. Erro Final: 0.3814
+
+A Iniciar Treino: [REGULARIZACAO]
+Época 1/2 concluída. Erro Final: 0.7828
+Época 2/2 concluída. Erro Final: 0.6148
+
+A Iniciar Treino: [RESTRICAO]
+Época 1/2 concluída. Erro Final: 936.7281
+Época 2/2 concluída. Erro Final: 851.4576
+
+============================================================
+             RELATÓRIO DE AUDITORIA             
+============================================================
+
+1. BASELINE:
+  -> Precisão Global: 0.70
+  -> (Independência) DI: 0.20 | SPD: 0.23
+  -> (Separação) Diff TPR: 0.14
+  -> (Suficiência) Diff PPV: 0.25
+
+2. REGULARIZAÇÃO:
+  -> Precisão Global: 0.76
+  -> (Independência) DI: 0.29 | SPD: 0.32
+  -> (Separação) Diff TPR: 0.07
+  -> (Suficiência) Diff PPV: 0.30
+
+3. RESTRIÇÕES:
+  -> Precisão Global: 0.75
+  -> (Independência) DI: 0.50 | SPD: 0.40
+  -> (Separação) Diff TPR: 0.00
+  -> (Suficiência) Diff PPV: 0.41
